@@ -14,9 +14,11 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { DateRange } from "react-date-range";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const Header = ({ type }) => {
   const [openDate, setOpenDate] = useState(false);
+  const [destination, setDestination] = useState("");
   const [openOptions, setOpenOptions] = useState(false);
   const [options, setOptions] = useState({ adult: 1, children: 0, room: 1 });
   const [dates, setDates] = useState([
@@ -26,6 +28,14 @@ const Header = ({ type }) => {
       key: "selection",
     },
   ]);
+
+  const navigate = useNavigate();
+
+  // 用navigate，location传递state在页面之间
+  const handleSearch = () => {
+    navigate("/hotels", { state: { destination, dates, options } });
+  };
+
   const handleOption = (name, operation) => {
     setOptions((prev) => {
       return {
@@ -86,6 +96,7 @@ const Header = ({ type }) => {
                   type="text"
                   placeholder="Where are you going?"
                   className="headerSearchInput"
+                  onChange={(e) => setDestination(e.target.value)}
                 />
               </div>
               <div className="headerSearchItem">
@@ -189,7 +200,9 @@ const Header = ({ type }) => {
                 )}
               </div>
               <div className="headerSearchItem">
-                <button className="headerBtn">Search</button>
+                <button className="headerBtn" onClick={handleSearch}>
+                  Search
+                </button>
               </div>
             </div>
           </>
